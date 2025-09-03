@@ -13,12 +13,14 @@ func main() {
 	brokers := os.Getenv("KAFKA_BROKERS")
 	topic := os.Getenv("KAFKA_TOPIC")
 	groupID := os.Getenv("KAFKA_GROUP_ID")
+	clientID := os.Getenv("KAFKA_CLIENT_ID")
 
 	opts := []kgo.Opt{
+		kgo.ClientID(clientID),
 		kgo.SeedBrokers(brokers),
 		kgo.ConsumerGroup(groupID),
 		kgo.ConsumeTopics(topic),
-		kgo.DisableAutoCommit(),
+		// kgo.DisableAutoCommit(),
 	}
 
 	client, err := kgo.NewClient(opts...)

@@ -16,6 +16,7 @@ func main() {
 
 	opts := []kgo.Opt{
 		kgo.SeedBrokers(brokers),
+		kgo.RecordPartitioner(kgo.RoundRobinPartitioner()),
 		kgo.AllowAutoTopicCreation(),
 	}
 

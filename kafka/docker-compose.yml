@@ -15,9 +15,10 @@ services:
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
-      - KAFKA_CLUSTER_ID=2HGb5hWvQISeY7iqZg5RKw
+      - KAFKA_CLUSTER_ID=cluster-1
       - KAFKA_LOG_DIRS=/opt/kafka/data
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_NUM_PARTITIONS=2
     volumes:
       - kafka_data:/opt/kafka/data
     healthcheck:
@@ -39,11 +40,11 @@ services:
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_TOPIC=test-topic
 
-  consumer:
+  consumer1:
     build:
       context: ./consumer
       dockerfile: Dockerfile
-    container_name: consumer
+    container_name: consumer1
     depends_on:
       kafka:
         condition: service_healthy
@@ -51,6 +52,21 @@ services:
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_TOPIC=test-topic
       - KAFKA_GROUP_ID=test-group
+      - KAFKA_CLIENT_ID=consumer1
+  
+  consumer2:
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+    container_name: consumer2
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=test-topic
+      - KAFKA_GROUP_ID=test-group
+      - KAFKA_CLIENT_ID=consumer2
 
 volumes:
   kafka_data:
